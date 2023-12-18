@@ -1,0 +1,47 @@
+name: macOS Build and Release
+
+on:
+  push:
+    branches:
+      - build
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20'
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build the App
+      run: npm run make
+
+    - name: Create and push tag
+      id: tag
+      run: |
+        TAG=v$(date +'%Y%m%d')
+        echo "TAG=$TAG" >> $GITHUB_ENV
+        echo "::set-output name=tag_name::$TAG"
+        git tag $TAG -f
+        git push origin $TAG --force
+
+    - name: Publish to GitHub Releases
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ env.TAG }}
+        files: out/make/solar-monitor.dmg
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TAG: ${{ steps.tag.outputs.tag_name }}

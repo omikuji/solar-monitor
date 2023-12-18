@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ログイン</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .login-container {
+        background: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 4px;
+        color: white;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <h2>ログイン</h2>
+      <form id="auth-form">
+        <input type="text" id="id" value="user" placeholder="ID" />
+        <input
+          type="password"
+          id="password"
+          value="12345678"
+          placeholder="パスワード"
+        />
+        <button type="submit">送信</button>
+      </form>
+    </div>
+
+    <script>
+      document
+        .getElementById("auth-form")
+        .addEventListener("submit", (event) => {
+          console.log("step 1");
+          event.preventDefault();
+          const id = document.getElementById("id").value;
+          const password = document.getElementById("password").value;
+          window.electronAPI.submitAuth(id, password);
+        });
+    </script>
+  </body>
+</html>
